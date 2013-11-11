@@ -22,8 +22,9 @@ class citrix_unix::farm (
 
     # TODO : verify command to check if farm is created
     exec { "ctxfarm_create_${name}":
-      command => "/opt/CTXSmf/sbin/ctxfarm -c < ${citrix_unix::ctxfarm_create_response_path}",
-      unless  => "/opt/CTXSmf/sbin/ctxfarm -l | grep ${name}",
+      path    => '/opt/CTXSmf/sbin:/bin:/usr/bin:/usr/local/bin',
+      command => "ctxfarm -c < ${citrix_unix::ctxfarm_create_response_path}",
+      unless  => "ctxfarm -l | grep ${name}",
       require => File['ctxfarm_create_responsefile'],
     }
 
@@ -44,8 +45,9 @@ class citrix_unix::farm (
 
     # TODO : verify command to check farm join
     exec { "ctxfarm_join_${name}":
-      command => "/opt/CTXSmf/sbin/ctxfarm -j < ${citrix_unix::ctxfarm_join_response_path}",
-      unless  => "/opt/CTXSmf/sbin/ctxfarm -l | grep -i ${::hostname}",
+      path    => '/opt/CTXSmf/sbin:/bin:/usr/bin:/usr/local/bin',
+      command => "ctxfarm -j < ${citrix_unix::ctxfarm_join_response_path}",
+      unless  => "ctxfarm -l | grep -i ${::hostname}",
       require => File['ctxfarm_join_responsefile'],
     }
   }
