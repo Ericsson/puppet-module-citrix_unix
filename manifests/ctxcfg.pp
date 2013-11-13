@@ -10,5 +10,6 @@ define citrix_unix::ctxcfg() {
     path    => '/opt/CTXSmf/sbin:x/bin:/usr/bin:/usr/local/bin',
     command => "ctxcfg ${parameter}",
     unless  => "ctxcfg -g | grep \'${parameter_grep}\'",
+    require => Service['ctxsrv_service'],
   }
 }

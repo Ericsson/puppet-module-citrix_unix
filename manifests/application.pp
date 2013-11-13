@@ -1,13 +1,30 @@
 # == Define: citrix_unix::application
 define citrix_unix::application(
   $appname    = $name,
-  $members,
+  $members    = ['*'],
   $command    = undef,
   $colordepth = '24bit',
   $windowsize = '95%',
+  $users      = undef,
+  $groups     = undef,
+  $use_ssl    = 'yes',
 ) {
 
-  $responsefile_path = "${citrix_unix::ctxappcfg_responsefile_base_path}/ctxappcfg_${appname}.response"
+  validate_array($members)
+  validate_string($colordepth)
+  validate_string($windowsize)
+  validate_re($use_ssl, ['^yes','^no'])
+  if $command {
+    validate_string($command)
+  }
+  if $users {
+    validate_array($users)
+  }
+  if $groups {
+    validate_array($groups)
+  }
+
+  $farm_members_str = join($members, ',')
 
   if $command {
     $mycommand = regsubst($command,'"','\"','G')
@@ -15,21 +32,22 @@ define citrix_unix::application(
     $mycommand = ''
   }
 
-  $farm_members_str = join($members, ',')
+  $appname_md5 = md5($appname)
+  $responsefile_path = "${citrix_unix::ctxappcfg_responsefile_base_path}/ctxappcfg_${appname_md5}.response"
 
-  file { "ctxappcfg_responsefile_${appname}":
+  file { "ctxappcfg_responsefile_${appname_md5}":
     ensure  => file,
     path    => $responsefile_path,
     mode    => $citrix_unix::ctxappcfg_responsefile_mode,
     owner   => $citrix_unix::ctxappcfg_responsefile_owner,
     group   => $citrix_unix::ctxappcfg_responsefile_group,
-    content => template('citrix_unix/ctxappcfg_response.erb'),
+    content => template('citrix_unix/ctxappcfg_responsefile.erb'),
   }
 
-  exec { "ctxappcfg-${appname}":
-    path    => '/opt/CTXSmf/sbin:/bin:/usr/bin:/usr/local/bin',
+  exec { "ctxappcfg-${appname_md5}":
+    path    => '/opt/CTXSmf/sbin:/opt/CTXSmf/bin:/bin:/usr/bin:/usr/local/bin',
     command => "ctxappcfg >/dev/null < ${responsefile_path}",
-    #unless => "# command to list applications",
-    require => File["ctxappcfg_responsefile_${appname}"],
+    unless  => "ctxqserver -app ${citrix_unix::master} | grep -i \"^${appname}\"",
+    require => File["ctxappcfg_responsefile_${appname_md5}"],
   }
 }

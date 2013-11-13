@@ -41,13 +41,21 @@ Farm master:
 <pre>
 ---
 citrix_unix::farm::is_master: 'true'
-citrix_unix::farm::name: 'farm-name'
+citrix_unix::farm::farm_name: 'farm-name'
+
+citrix_unix::farm::applications:
+  'Solaris10xterm':
+    command: 'tcsh -c "/usr/openwin/bin/xterm -title `hostname`"'
+    passphrase: 'secret'
+    use_ssl: 'yes'
+    groups:
+      - citrixusers
 </pre>
 
 Farm slave:
 <pre>
 ---
-citrix_unix::farm::name: 'farm-name'
+citrix_unix::farm::farm_name: 'farm-name'
 citrix_unix::farm::master: 'master-server'
 citrix_unix::farm::passphrase: 'secret'
 </pre>

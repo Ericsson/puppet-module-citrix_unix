@@ -8,9 +8,14 @@ no
 
 <%= @windowsize %>
 <%= @colordepth %>
-yes
+<%= @use_ssl %>
+<% users.each do |u| -%>
+<%= @u %>
+<% end -%>
 
-<%= @group %>
+<% groups.each do |g| -%>
+<%= @g %>
+<% end -%>
 
 <%= @farm_members_str %>
 
