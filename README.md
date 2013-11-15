@@ -5,17 +5,24 @@ Puppet module to manage Citrix Presentation Server for UNIX
 
 ===
 
+Example use:
+
+<pre>
+include citrix_unix::farm
+</pre>
+
 Example hiera config:
 
 <pre>
 ---
 citrix_unix::ctxsrvr_user_home: '/home/citrix'
 citrix_unix::ctxssl_user_home: '/home/citrix'
-citrix_unix::ctx_patch_base_path: '/var/tmp/Citrix/hotfix'
+citrix_unix::ctx_patch_base_path: '/net/server/Citrix/hotfix'
 citrix_unix::ctx_patch_name: 'PSE400SOL067'
-citrix_unix::package_source: '/var/tmp/Citrix/solaris/CTXSmf'
-citrix_unix::package_responsefile: '/var/tmp/Citrix/solaris/response'
-citrix_unix::package_adminfile: '/var/tmp/Citrix/solaris/admin'
+citrix_unix::license_flexserver: 'ctx-lic.example.com'
+citrix_unix::package_source: '/net/server/Citrix/solaris/CTXSmf'
+citrix_unix::package_responsefile: '/net/server/Citrix/solaris/response'
+citrix_unix::package_adminfile: '/net/server/Citrix/solaris/admin'
 
 citrix_unix::ctxcfg_parameters:
   - '-a prompt=FALSE,inherit'
@@ -34,7 +41,7 @@ citrix_unix::ctxcfg_parameters:
   - '-m enable,lowerthreshold=150,upperthreshold=500'
   - '-D disable'
   - '-o set=100'
-  - '-k nomorelogons=1'
+  - '-k nomorelogons=0'
 </pre>
 
 Farm master:

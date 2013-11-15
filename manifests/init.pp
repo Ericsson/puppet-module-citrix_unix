@@ -30,6 +30,8 @@ class citrix_unix (
   $ctxappcfg_responsefile_mode      = '0640',
   $ctxappcfg_responsefile_owner     = 'root',
   $ctxappcfg_responsefile_group     = 'root',
+  $ctxxmld_config_path              = '/var/CTXSmf/ctxxmld.cfg',
+  $license_flexserver               = undef,
   $package_name                     = 'CTXSmf',
   $package_provider                 = 'sun',
   $package_source                   = undef,
@@ -49,6 +51,8 @@ class citrix_unix (
       fail("citrix_unix is supported on osfamily Solaris. Your osfamily identified as ${::osfamily}")
     }
   }
+
+  validate_string($license_flexserver)
 
   if $ctx_patch_base_path {
     validate_absolute_path($ctx_patch_base_path)
