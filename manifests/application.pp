@@ -1,7 +1,7 @@
 # == Define: citrix_unix::application
 define citrix_unix::application(
   $appname    = $name,
-  $members    = ['*'],
+  $members    = undef,
   $command    = undef,
   $colordepth = '24bit',
   $windowsize = '95%',
@@ -48,6 +48,6 @@ define citrix_unix::application(
     path    => '/opt/CTXSmf/sbin:/opt/CTXSmf/bin:/bin:/usr/bin:/usr/local/bin',
     command => "ctxappcfg >/dev/null < ${responsefile_path}",
     unless  => "ctxqserver -app ${citrix_unix::master} | grep -i \"^${appname}\"",
-    require => File["ctxappcfg_responsefile_${appname_md5}"],
+    require => [Service['ctxsrv_service'], File["ctxappcfg_responsefile_${appname_md5}"]],
   }
 }

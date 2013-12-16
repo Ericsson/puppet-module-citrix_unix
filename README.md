@@ -8,7 +8,7 @@ Puppet module to manage Citrix Presentation Server for UNIX
 Example use:
 
 <pre>
-include citrix_unix::farm
+include citrix_unix
 </pre>
 
 Example hiera config:
@@ -47,13 +47,12 @@ citrix_unix::ctxcfg_parameters:
 Farm master:
 <pre>
 ---
-citrix_unix::farm::is_master: 'true'
-citrix_unix::farm::farm_name: 'farm-name'
+citrix_unix::is_farm_master: 'true'
+citrix_unix::farm_name: 'farm-name'
 
-citrix_unix::farm::applications:
+citrix_unix::applications:
   'Solaris10xterm':
     command: 'tcsh -c "/usr/openwin/bin/xterm -title `hostname`"'
-    passphrase: 'secret'
     use_ssl: 'yes'
     groups:
       - citrixusers
@@ -62,7 +61,7 @@ citrix_unix::farm::applications:
 Farm slave:
 <pre>
 ---
-citrix_unix::farm::farm_name: 'farm-name'
-citrix_unix::farm::master: 'master-server'
-citrix_unix::farm::passphrase: 'secret'
+citrix_unix::farm_name: 'farm-name'
+citrix_unix::farm_master: 'master-server'
+citrix_unix::farm_passphrase: 'secret'
 </pre>
