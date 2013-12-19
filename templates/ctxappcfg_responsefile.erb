@@ -1,0 +1,26 @@
+publish
+<%= @appname %>
+<%= @mycommand %>
+
+no
+
+
+
+<%= @windowsize %>
+<%= @colordepth %>
+<%= @use_ssl %>
+<% if @users -%>
+<% users.each do |u| -%>
+<%= u %>
+<% end -%>
+<% end -%>
+
+<% if @groups -%>
+<% groups.each do |g| -%>
+<%= g %>
+<% end -%>
+<% end -%>
+
+<%= @farm_members_str %>
+
+exit
