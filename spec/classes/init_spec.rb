@@ -10,7 +10,7 @@ describe 'citrix_unix' do
 
     it 'should fail' do
       expect {
-        should include_class('citrix_unix')
+        should contain_class('citrix_unix')
       }.to raise_error(Puppet::Error,/ctx_patch_base_path must be set to a absolute path/)
     end
   end
@@ -51,7 +51,7 @@ describe 'citrix_unix' do
 
     it 'should fail' do
       expect {
-        should include_class('citrix_unix')
+        should contain_class('citrix_unix')
       }.to raise_error(Puppet::Error,/citrix_unix is supported on osfamily Solaris/)
     end
   end
