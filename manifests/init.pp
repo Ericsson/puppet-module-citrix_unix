@@ -194,6 +194,7 @@ class citrix_unix (
       owner   => $ctxfarm_responsefile_owner,
       group   => $ctxfarm_responsefile_group,
       content => "${farm_name}\n${farm_passphrase_real}\n${farm_passphrase_real}\n",
+      require => Package['ctxsmf_package'],
     }
 
     exec { 'ctxfarm_create':
@@ -224,6 +225,7 @@ class citrix_unix (
       owner   => $ctxfarm_responsefile_owner,
       group   => $ctxfarm_responsefile_group,
       content => "${farm_name}\n${farm_passphrase_real}\n${farm_master}\n",
+      require => Package['ctxsmf_package'],
     }
 
     exec { 'ctxfarm_join':
