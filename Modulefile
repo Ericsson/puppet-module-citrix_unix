@@ -1,5 +1,5 @@
 name 'ericsson-citrix_unix'
-version '0.1.0'
+version '0.1.1'
 source 'git://github.com/Ericsson/puppet-module-citrix_unix.git'
 author 'ericsson'
 license 'Apache License, Version 2.0'
@@ -7,4 +7,4 @@ summary 'Manages Citrix Presentation Server for UNIX'
 description 'Manages Citrix Presentation Server for UNIX'
 project_page 'https://github.com/Ericsson/puppet-module-citrix_unix'
 
-dependency 'puppetlabs/stdlib', '3.2.x'
+dependency 'puppetlabs/stdlib', '>= 3.2.0'
