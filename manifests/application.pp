@@ -1,7 +1,7 @@
 # == Define: citrix_unix::application
 define citrix_unix::application(
   $appname    = $name,
-  $members    = undef,
+  $members    = ['*'],
   $command    = undef,
   $colordepth = '24bit',
   $windowsize = '95%',
