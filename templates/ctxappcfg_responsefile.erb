@@ -10,14 +10,22 @@ no
 <%= @colordepth %>
 <%= @use_ssl %>
 <% if @users -%>
+<% if @users.is_a?(Array) -%>
 <% users.each do |u| -%>
 <%= u %>
+<% end -%>
+<% else -%>
+<%= @users %>
 <% end -%>
 <% end -%>
 
 <% if @groups -%>
+<% if @groups.is_a?(Array) -%>
 <% groups.each do |g| -%>
 <%= g %>
+<% end -%>
+<% else -%>
+<%= @groups %>
 <% end -%>
 <% end -%>
 
