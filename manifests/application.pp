@@ -29,7 +29,7 @@ define citrix_unix::application(
   if $command {
     $mycommand = regsubst($command,'"','\"','G')
   } else {
-    $mycommand = ''
+    $mycommand = '' # lint:ignore:empty_string_assignment
   }
 
   $appname_md5 = md5($appname)
