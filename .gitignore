@@ -1,3 +1,4 @@
+# Default .gitignore for Ruby
 *.gem
 *.rbc
 .bundle
@@ -24,6 +25,10 @@ doc/
 .DS_Store
 
 # Puppet
-metadata.json
 coverage/
+spec/fixtures/manifests/*
 spec/fixtures/modules/*
+Gemfile.lock
+
+# Geppetto
+.project
