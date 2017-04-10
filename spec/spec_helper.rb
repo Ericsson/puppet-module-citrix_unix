@@ -12,6 +12,7 @@ RSpec.configure do |config|
   end
   config.default_facts = {
     :environment => 'rp_env',
+    :hostname    => 'spectesthost',
     :osfamily    => 'Solaris',
   }
 end
