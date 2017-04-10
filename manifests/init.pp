@@ -19,8 +19,8 @@ class citrix_unix (
   $ctxssl_user_home                 = '/home/ctxssl',
   $ctxssl_user_managehome           = true,
   $ctxssl_config_mode               = '0640',
-  $ctxssl_config_owner              = $ctxssl_user_name,
-  $ctxssl_config_group              = $ctxadm_group_name,
+  $ctxssl_config_owner              = undef,
+  $ctxssl_config_group              = undef,
   $ctxssl_config_path               = '/var/CTXSmf/ssl/config',
   $ctxfarm_create_response_path     = '/var/CTXSmf/ctxfarm_create.response',
   $ctxfarm_join_response_path       = '/var/CTXSmf/ctxfarm_join.response',
@@ -49,6 +49,17 @@ class citrix_unix (
   $package_adminfile                = undef,
   $enable_ssl_relay                 = true,
 ) {
+
+  # variable preparations
+  case $ctxssl_config_owner {
+    undef:   { $ctxssl_config_owner_real = $ctxssl_user_name }
+    default: { $ctxssl_config_owner_real = $ctxssl_config_owner }
+  }
+
+  case $ctxssl_config_group {
+    undef:   { $ctxssl_config_group_real = $ctxadm_group_name }
+    default: { $ctxssl_config_group_real = $ctxssl_config_group }
+  }
 
   case $::osfamily {
     'Solaris': { }
@@ -164,8 +175,8 @@ class citrix_unix (
     ensure  => file,
     path    => $ctxssl_config_path,
     mode    => $ctxssl_config_mode,
-    owner   => $ctxssl_config_owner,
-    group   => $ctxssl_config_group,
+    owner   => $ctxssl_config_owner_real,
+    group   => $ctxssl_config_group_real,
     content => template('citrix_unix/ssl_config.erb'),
     require => Package['ctxsmf_package'],
     notify  => Service['ctxsrv_service'],
