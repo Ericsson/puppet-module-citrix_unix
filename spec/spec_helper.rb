@@ -10,4 +10,8 @@ RSpec.configure do |config|
     Facter.clear
     Facter.clear_messages
   end
+  config.default_facts = {
+    :environment => 'rp_env',
+    :osfamily    => 'Solaris',
+  }
 end
