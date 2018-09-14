@@ -11,7 +11,7 @@ no
 <%= @use_ssl %>
 <% if @users -%>
 <% if @users.is_a?(Array) -%>
-<% users.each do |u| -%>
+<% @users.each do |u| -%>
 <%= u %>
 <% end -%>
 <% else -%>
@@ -21,7 +21,7 @@ no
 
 <% if @groups -%>
 <% if @groups.is_a?(Array) -%>
-<% groups.each do |g| -%>
+<% @groups.each do |g| -%>
 <%= g %>
 <% end -%>
 <% else -%>

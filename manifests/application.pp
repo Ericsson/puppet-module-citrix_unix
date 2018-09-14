@@ -47,7 +47,7 @@ define citrix_unix::application(
   exec { "ctxappcfg-${appname_md5}":
     path    => '/opt/CTXSmf/sbin:/opt/CTXSmf/bin:/bin:/usr/bin:/usr/local/bin',
     command => "ctxappcfg >/dev/null < ${responsefile_path}",
-    unless  => "ctxqserver -app ${citrix_unix::master} | grep -i \"^${appname}\"",
+    unless  => "ctxqserver -app ${citrix_unix::farm_master} | grep -i \"^${appname}\"",
     require => [Service['ctxsrv_service'], File["ctxappcfg_responsefile_${appname_md5}"]],
   }
 }

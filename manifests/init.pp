@@ -223,7 +223,7 @@ class citrix_unix (
     }
 
     if $applications {
-      create_resources('application', $applications)
+      create_resources('::citrix_unix::application', $applications)
     }
   }
   else {
