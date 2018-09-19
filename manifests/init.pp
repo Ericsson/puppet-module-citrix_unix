@@ -68,8 +68,36 @@ class citrix_unix (
     }
   }
 
-  validate_string($farm_name)
-  validate_string($license_flexserver)
+  validate_absolute_path(
+    $ctxsrvr_user_shell,
+    $ctxsrvr_user_home,
+    $ctxssl_user_shell,
+    $ctxssl_user_home,
+    $ctxssl_config_path,
+    $ctxfarm_create_response_path,
+    $ctxfarm_join_response_path,
+    $ctxappcfg_responsefile_base_path,
+    $ctxxmld_config_path,
+  )
+
+
+  if is_string($ctxadm_group_name)            == false { fail('citrix_unix::ctxadm_group_name is not a string') }
+  if is_string($ctxsrvr_user_name)            == false { fail('citrix_unix::ctxsrvr_user_name is not a string') }
+  if is_string($ctxssl_user_name)             == false { fail('citrix_unix::ctxssl_user_name is not a string') }
+  if is_string($ctxfarm_responsefile_owner)   == false { fail('citrix_unix::ctxfarm_responsefile_owner is not a string') }
+  if is_string($ctxfarm_responsefile_group)   == false { fail('citrix_unix::ctxfarm_responsefile_group is not a string') }
+  if is_string($ctxappcfg_responsefile_owner) == false { fail('citrix_unix::ctxappcfg_responsefile_owner is not a string') }
+  if is_string($ctxappcfg_responsefile_group) == false { fail('citrix_unix::ctxappcfg_responsefile_group is not a string') }
+  if is_string($farm_name)                    == false { fail('citrix_unix::farm_name is not a string') }
+  if is_string($license_flexserver)           == false { fail('citrix_unix::license_flexserver is not a string') }
+  if is_string($package_name)                 == false { fail('citrix_unix::package_name is not a string') }
+  if is_string($package_provider)             == false { fail('citrix_unix::package_provider is not a string') }
+  if is_string($package_vendor)               == false { fail('citrix_unix::package_vendor is not a string') }
+  if is_string($package_description)          == false { fail('citrix_unix::package_description is not a string') }
+
+  validate_re($ctxssl_config_mode,          '^[0-7]{4}$', 'citrix_unix::ctxssl_config_mode is not a file mode in octal notation.')
+  validate_re($ctxfarm_responsefile_mode,   '^[0-7]{4}$', 'citrix_unix::ctxfarm_responsefile_mode is not a file mode in octal notation.')
+  validate_re($ctxappcfg_responsefile_mode, '^[0-7]{4}$', 'citrix_unix::ctxappcfg_responsefile_mode is not a file mode in octal notation.')
 
   if $applications {
     validate_hash($applications)
@@ -227,7 +255,7 @@ class citrix_unix (
     }
   }
   else {
-    validate_string($farm_master)
+    if is_string($farm_master) == false { fail('citrix_unix::farm_master is not a string') }
 
     file { 'ctxfarm_join_responsefile':
       ensure  => file,
