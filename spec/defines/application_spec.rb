@@ -132,7 +132,7 @@ describe 'citrix_unix::application' do
         :message => 'is not a string( containing yes or no)?',
       },
       'String' => {
-        :name    => %w(colordepth windowsize command),
+        :name    => %w(appname colordepth windowsize command),
         :valid   => %w(string),
         :invalid => [%w(array), { 'ha' => 'sh' }, 3, 2.42, true],
         :message => 'is not a string',

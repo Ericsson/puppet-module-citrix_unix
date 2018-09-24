@@ -17,6 +17,7 @@ define citrix_unix::application(
     $groups,
   )
 
+  if is_string($appname)    == false { fail('citrix_unix::application::appname is not a string') }
   if is_string($colordepth) == false { fail('citrix_unix::application::colordepth is not a string') }
   if is_string($command)    == false { fail('citrix_unix::application::command is not a string') }
   if is_string($windowsize) == false { fail('citrix_unix::application::windowsize is not a string') }
