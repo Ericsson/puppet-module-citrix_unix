@@ -5,24 +5,24 @@ define citrix_unix::application(
   $command    = undef,
   $colordepth = '24bit',
   $windowsize = '95%',
-  $users      = undef,
-  $groups     = undef,
+  $users      = [],
+  $groups     = [],
   $use_ssl    = 'yes',
 ) {
 
-  validate_array($members)
+# variable validations
+  validate_array(
+    $members,
+    $users,
+    $groups,
+  )
+
   if is_string($colordepth) == false { fail('citrix_unix::application::colordepth is not a string') }
   if is_string($windowsize) == false { fail('citrix_unix::application::windowsize is not a string') }
   validate_re($use_ssl, ['^yes','^no'], 'citrix_unix::application::use_ssl is not a string containing yes or no.')
 
   if $command {
     if is_string($command) == false { fail('citrix_unix::application::command is not a string') }
-  }
-  if $users {
-    validate_array($users)
-  }
-  if $groups {
-    validate_array($groups)
   }
 
   $farm_members_str = join($members, ',')
