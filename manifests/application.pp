@@ -27,7 +27,6 @@ define citrix_unix::application(
   # functionality
   $farm_members_str = join($members, ',')
   $command_str = regexpescape($command)
-
   $appname_md5 = md5($appname)
   $responsefile_path = "${citrix_unix::ctxappcfg_responsefile_base_path}/ctxappcfg_${appname_md5}.response"
 

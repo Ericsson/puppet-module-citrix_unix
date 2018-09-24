@@ -61,13 +61,19 @@ class citrix_unix (
     default: { $ctxssl_config_group_real = $ctxssl_config_group }
   }
 
-  case $::osfamily {
-    'Solaris': { }
-    default: {
-      fail("citrix_unix is supported on osfamily Solaris. Your osfamily identified as ${::osfamily}")
-    }
+  if is_string($is_farm_master) {
+    $is_farm_master_real = str2bool($is_farm_master)
+  } else {
+    $is_farm_master_real = $is_farm_master
   }
 
+  if $farm_passphrase {
+    $farm_passphrase_real = $farm_passphrase
+  } else {
+    $farm_passphrase_real = $farm_name
+  }
+
+  # variable validations
   validate_absolute_path(
     $ctxsrvr_user_shell,
     $ctxsrvr_user_home,
@@ -85,7 +91,6 @@ class citrix_unix (
     $ctxssl_config_path,
   )
 
-
   if is_string($ctxadm_group_name)            == false { fail('citrix_unix::ctxadm_group_name is not a string') }
   if is_string($ctxsrvr_user_name)            == false { fail('citrix_unix::ctxsrvr_user_name is not a string') }
   if is_string($ctxssl_user_name)             == false { fail('citrix_unix::ctxssl_user_name is not a string') }
@@ -94,6 +99,7 @@ class citrix_unix (
   if is_string($ctxappcfg_responsefile_owner) == false { fail('citrix_unix::ctxappcfg_responsefile_owner is not a string') }
   if is_string($ctxappcfg_responsefile_group) == false { fail('citrix_unix::ctxappcfg_responsefile_group is not a string') }
   if is_string($farm_name)                    == false { fail('citrix_unix::farm_name is not a string') }
+  if is_string($farm_master)                  == false { fail('citrix_unix::farm_master is not a string') }
   if is_string($license_flexserver)           == false { fail('citrix_unix::license_flexserver is not a string') }
   if is_string($package_name)                 == false { fail('citrix_unix::package_name is not a string') }
   if is_string($package_provider)             == false { fail('citrix_unix::package_provider is not a string') }
@@ -110,16 +116,12 @@ class citrix_unix (
   validate_hash($applications)
   validate_array($ctxcfg_parameters)
 
-  if is_string($is_farm_master) {
-    $is_farm_master_real = str2bool($is_farm_master)
-  } else {
-    $is_farm_master_real = $is_farm_master
-  }
-
-  if $farm_passphrase {
-    $farm_passphrase_real = $farm_passphrase
-  } else {
-    $farm_passphrase_real = $farm_name
+  # functionality
+  case $::osfamily {
+    'Solaris': { }
+    default: {
+      fail("citrix_unix is supported on osfamily Solaris. Your osfamily identified as ${::osfamily}")
+    }
   }
 
   group { 'ctxadm_group':
@@ -224,8 +226,6 @@ class citrix_unix (
     create_resources('::citrix_unix::application', $applications)
   }
   else {
-    if is_string($farm_master) == false { fail('citrix_unix::farm_master is not a string') }
-
     file { 'ctxfarm_join_responsefile':
       ensure  => file,
       path    => $ctxfarm_join_response_path,
