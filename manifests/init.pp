@@ -3,7 +3,11 @@
 # Module to manage Citrix Presentation Server for UNIX
 #
 class citrix_unix (
-  $applications                     = undef,
+  $ctx_patch_base_path,
+  $package_adminfile,
+  $package_responsefile,
+  $package_source,
+  $applications                     = {},
   $ctxadm_group_name                = 'ctxadm',
   $ctxadm_group_gid                 = '796',
   $ctxsrvr_user_name                = 'ctxsrvr',
@@ -32,9 +36,8 @@ class citrix_unix (
   $ctxappcfg_responsefile_owner     = 'root',
   $ctxappcfg_responsefile_group     = 'root',
   $ctxxmld_config_path              = '/var/CTXSmf/ctxxmld.cfg',
-  $ctxcfg_parameters                = undef,
+  $ctxcfg_parameters                = [],
   $ctx_patch_name                   = undef,
-  $ctx_patch_base_path              = undef,
   $farm_name                        = undef,
   $farm_master                      = undef,
   $farm_passphrase                  = undef,
@@ -42,11 +45,8 @@ class citrix_unix (
   $license_flexserver               = undef,
   $package_name                     = 'CTXSmf',
   $package_provider                 = 'sun',
-  $package_source                   = undef,
   $package_vendor                   = 'Citrix Systems Inc',
   $package_description              = 'Citrix MetaFrame Presentation Server 4.0',
-  $package_responsefile             = undef,
-  $package_adminfile                = undef,
   $enable_ssl_relay                 = true,
 ) {
 
@@ -61,54 +61,6 @@ class citrix_unix (
     default: { $ctxssl_config_group_real = $ctxssl_config_group }
   }
 
-  case $::osfamily {
-    'Solaris': { }
-    default: {
-      fail("citrix_unix is supported on osfamily Solaris. Your osfamily identified as ${::osfamily}")
-    }
-  }
-
-  validate_string($farm_name)
-  validate_string($license_flexserver)
-
-  if $applications {
-    validate_hash($applications)
-  }
-
-  if $ctx_patch_base_path {
-    validate_absolute_path($ctx_patch_base_path)
-  } else {
-    fail('ctx_patch_base_path must be set to a absolute path containing the Citrix patch')
-  }
-
-  if $package_source {
-    validate_absolute_path($package_source)
-  } else {
-    fail('package_source must be set')
-  }
-
-  if $package_responsefile {
-    validate_absolute_path($package_responsefile)
-  } else {
-    fail('package_responsefile must be set')
-  }
-
-  if $package_adminfile {
-    validate_absolute_path($package_adminfile)
-  } else {
-    fail('package_adminfile must be set')
-  }
-
-  if $ctxssl_config_path {
-    validate_absolute_path($ctxssl_config_path)
-  } else {
-    fail('ctxssl_config_path must be set')
-  }
-
-  if $ctxcfg_parameters {
-    validate_array($ctxcfg_parameters)
-  }
-
   if is_string($is_farm_master) {
     $is_farm_master_real = str2bool($is_farm_master)
   } else {
@@ -119,6 +71,57 @@ class citrix_unix (
     $farm_passphrase_real = $farm_passphrase
   } else {
     $farm_passphrase_real = $farm_name
+  }
+
+  # variable validations
+  validate_absolute_path(
+    $ctxsrvr_user_shell,
+    $ctxsrvr_user_home,
+    $ctxssl_user_shell,
+    $ctxssl_user_home,
+    $ctxssl_config_path,
+    $ctxfarm_create_response_path,
+    $ctxfarm_join_response_path,
+    $ctxappcfg_responsefile_base_path,
+    $ctxxmld_config_path,
+    $ctx_patch_base_path,
+    $package_source,
+    $package_responsefile,
+    $package_adminfile,
+    $ctxssl_config_path,
+  )
+
+  if is_string($ctxadm_group_name)            == false { fail('citrix_unix::ctxadm_group_name is not a string') }
+  if is_string($ctxsrvr_user_name)            == false { fail('citrix_unix::ctxsrvr_user_name is not a string') }
+  if is_string($ctxssl_user_name)             == false { fail('citrix_unix::ctxssl_user_name is not a string') }
+  if is_string($ctxfarm_responsefile_owner)   == false { fail('citrix_unix::ctxfarm_responsefile_owner is not a string') }
+  if is_string($ctxfarm_responsefile_group)   == false { fail('citrix_unix::ctxfarm_responsefile_group is not a string') }
+  if is_string($ctxappcfg_responsefile_owner) == false { fail('citrix_unix::ctxappcfg_responsefile_owner is not a string') }
+  if is_string($ctxappcfg_responsefile_group) == false { fail('citrix_unix::ctxappcfg_responsefile_group is not a string') }
+  if is_string($farm_name)                    == false { fail('citrix_unix::farm_name is not a string') }
+  if is_string($farm_master)                  == false { fail('citrix_unix::farm_master is not a string') }
+  if is_string($license_flexserver)           == false { fail('citrix_unix::license_flexserver is not a string') }
+  if is_string($package_name)                 == false { fail('citrix_unix::package_name is not a string') }
+  if is_string($package_provider)             == false { fail('citrix_unix::package_provider is not a string') }
+  if is_string($package_vendor)               == false { fail('citrix_unix::package_vendor is not a string') }
+  if is_string($package_description)          == false { fail('citrix_unix::package_description is not a string') }
+  if is_string($ctxssl_config_mode)           == false { fail('citrix_unix::ctxssl_config_mode is not a string') }
+  if is_string($ctxfarm_responsefile_mode)    == false { fail('citrix_unix::ctxfarm_responsefile_mode is not a string') }
+  if is_string($ctxappcfg_responsefile_mode)  == false { fail('citrix_unix::ctxappcfg_responsefile_mode is not a string') }
+
+  validate_re($ctxssl_config_mode,          '^[0-7]{4}$', 'citrix_unix::ctxssl_config_mode is not a file mode in octal notation.')
+  validate_re($ctxfarm_responsefile_mode,   '^[0-7]{4}$', 'citrix_unix::ctxfarm_responsefile_mode is not a file mode in octal notation.')
+  validate_re($ctxappcfg_responsefile_mode, '^[0-7]{4}$', 'citrix_unix::ctxappcfg_responsefile_mode is not a file mode in octal notation.')
+
+  validate_hash($applications)
+  validate_array($ctxcfg_parameters)
+
+  # functionality
+  case $::osfamily {
+    'Solaris': { }
+    default: {
+      fail("citrix_unix is supported on osfamily Solaris. Your osfamily identified as ${::osfamily}")
+    }
   }
 
   group { 'ctxadm_group':
@@ -192,9 +195,7 @@ class citrix_unix (
     require  => Package['ctxsmf_package'],
   }
 
-  if $ctxcfg_parameters {
-    citrix_unix::ctxcfg { $ctxcfg_parameters: }
-  }
+  citrix_unix::ctxcfg { $ctxcfg_parameters: }
 
   # Citrix farm management
   if $is_farm_master_real == true {
@@ -222,13 +223,9 @@ class citrix_unix (
       require => Service['ctxsrv_service'],
     }
 
-    if $applications {
-      create_resources('application', $applications)
-    }
+    create_resources('::citrix_unix::application', $applications)
   }
   else {
-    validate_string($farm_master)
-
     file { 'ctxfarm_join_responsefile':
       ensure  => file,
       path    => $ctxfarm_join_response_path,

@@ -1,6 +1,6 @@
 publish
 <%= @appname %>
-<%= @mycommand %>
+<%= @command_str %>
 
 no
 
@@ -9,24 +9,12 @@ no
 <%= @windowsize %>
 <%= @colordepth %>
 <%= @use_ssl %>
-<% if @users -%>
-<% if @users.is_a?(Array) -%>
-<% users.each do |u| -%>
-<%= u %>
-<% end -%>
-<% else -%>
-<%= @users %>
-<% end -%>
+<% @users.each do |user| -%>
+<%= user %>
 <% end -%>
 
-<% if @groups -%>
-<% if @groups.is_a?(Array) -%>
-<% groups.each do |g| -%>
-<%= g %>
-<% end -%>
-<% else -%>
-<%= @groups %>
-<% end -%>
+<% @groups.each do |group| -%>
+<%= group %>
 <% end -%>
 
 <%= @farm_members_str %>

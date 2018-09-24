@@ -2,6 +2,6 @@ fixtures:
   repositories:
     stdlib:
       repo: 'git://github.com/puppetlabs/puppetlabs-stdlib.git'
-      ref: '4.6.0'
+      ref: '4.13.0'
   symlinks:
     citrix_unix: "#{source_dir}"
