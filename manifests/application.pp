@@ -18,20 +18,13 @@ define citrix_unix::application(
   )
 
   if is_string($colordepth) == false { fail('citrix_unix::application::colordepth is not a string') }
+  if is_string($command)    == false { fail('citrix_unix::application::command is not a string') }
   if is_string($windowsize) == false { fail('citrix_unix::application::windowsize is not a string') }
   validate_re($use_ssl, ['^yes','^no'], 'citrix_unix::application::use_ssl is not a string containing yes or no.')
 
-  if $command {
-    if is_string($command) == false { fail('citrix_unix::application::command is not a string') }
-  }
-
+  # functionality
   $farm_members_str = join($members, ',')
-
-  if $command {
-    $mycommand = regsubst($command,'"','\"','G')
-  } else {
-    $mycommand = '' # lint:ignore:empty_string_assignment
-  }
+  $command_str = regsubst($command,'"','\"','G')
 
   $appname_md5 = md5($appname)
   $responsefile_path = "${citrix_unix::ctxappcfg_responsefile_base_path}/ctxappcfg_${appname_md5}.response"
