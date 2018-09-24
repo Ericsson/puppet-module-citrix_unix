@@ -3,6 +3,10 @@
 # Module to manage Citrix Presentation Server for UNIX
 #
 class citrix_unix (
+  $ctx_patch_base_path,
+  $package_adminfile,
+  $package_responsefile,
+  $package_source,
   $applications                     = {},
   $ctxadm_group_name                = 'ctxadm',
   $ctxadm_group_gid                 = '796',
@@ -34,7 +38,6 @@ class citrix_unix (
   $ctxxmld_config_path              = '/var/CTXSmf/ctxxmld.cfg',
   $ctxcfg_parameters                = [],
   $ctx_patch_name                   = undef,
-  $ctx_patch_base_path              = undef,
   $farm_name                        = undef,
   $farm_master                      = undef,
   $farm_passphrase                  = undef,
@@ -42,11 +45,8 @@ class citrix_unix (
   $license_flexserver               = undef,
   $package_name                     = 'CTXSmf',
   $package_provider                 = 'sun',
-  $package_source                   = undef,
   $package_vendor                   = 'Citrix Systems Inc',
   $package_description              = 'Citrix MetaFrame Presentation Server 4.0',
-  $package_responsefile             = undef,
-  $package_adminfile                = undef,
   $enable_ssl_relay                 = true,
 ) {
 
@@ -78,6 +78,11 @@ class citrix_unix (
     $ctxfarm_join_response_path,
     $ctxappcfg_responsefile_base_path,
     $ctxxmld_config_path,
+    $ctx_patch_base_path,
+    $package_source,
+    $package_responsefile,
+    $package_adminfile,
+    $ctxssl_config_path,
   )
 
 
@@ -103,37 +108,6 @@ class citrix_unix (
   validate_re($ctxappcfg_responsefile_mode, '^[0-7]{4}$', 'citrix_unix::ctxappcfg_responsefile_mode is not a file mode in octal notation.')
 
   validate_hash($applications)
-
-  if $ctx_patch_base_path {
-    validate_absolute_path($ctx_patch_base_path)
-  } else {
-    fail('ctx_patch_base_path must be set to a absolute path containing the Citrix patch')
-  }
-
-  if $package_source {
-    validate_absolute_path($package_source)
-  } else {
-    fail('package_source must be set')
-  }
-
-  if $package_responsefile {
-    validate_absolute_path($package_responsefile)
-  } else {
-    fail('package_responsefile must be set')
-  }
-
-  if $package_adminfile {
-    validate_absolute_path($package_adminfile)
-  } else {
-    fail('package_adminfile must be set')
-  }
-
-  if $ctxssl_config_path {
-    validate_absolute_path($ctxssl_config_path)
-  } else {
-    fail('ctxssl_config_path must be set')
-  }
-
   validate_array($ctxcfg_parameters)
 
   if is_string($is_farm_master) {

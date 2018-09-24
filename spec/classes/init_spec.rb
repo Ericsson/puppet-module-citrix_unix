@@ -41,7 +41,7 @@ describe 'citrix_unix' do
     it 'should fail' do
       expect {
         should contain_class('citrix_unix')
-      }.to raise_error(Puppet::Error,/ctx_patch_base_path must be set to a absolute path/)
+      }.to raise_error(Puppet::Error,/(Must pass|expects a value for parameter)/) # Puppet (3.x|>= 4.x)
     end
   end
 
