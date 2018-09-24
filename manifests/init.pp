@@ -3,7 +3,7 @@
 # Module to manage Citrix Presentation Server for UNIX
 #
 class citrix_unix (
-  $applications                     = undef,
+  $applications                     = {},
   $ctxadm_group_name                = 'ctxadm',
   $ctxadm_group_gid                 = '796',
   $ctxsrvr_user_name                = 'ctxsrvr',
@@ -32,7 +32,7 @@ class citrix_unix (
   $ctxappcfg_responsefile_owner     = 'root',
   $ctxappcfg_responsefile_group     = 'root',
   $ctxxmld_config_path              = '/var/CTXSmf/ctxxmld.cfg',
-  $ctxcfg_parameters                = undef,
+  $ctxcfg_parameters                = [],
   $ctx_patch_name                   = undef,
   $ctx_patch_base_path              = undef,
   $farm_name                        = undef,
@@ -102,9 +102,7 @@ class citrix_unix (
   validate_re($ctxfarm_responsefile_mode,   '^[0-7]{4}$', 'citrix_unix::ctxfarm_responsefile_mode is not a file mode in octal notation.')
   validate_re($ctxappcfg_responsefile_mode, '^[0-7]{4}$', 'citrix_unix::ctxappcfg_responsefile_mode is not a file mode in octal notation.')
 
-  if $applications {
-    validate_hash($applications)
-  }
+  validate_hash($applications)
 
   if $ctx_patch_base_path {
     validate_absolute_path($ctx_patch_base_path)
@@ -136,9 +134,7 @@ class citrix_unix (
     fail('ctxssl_config_path must be set')
   }
 
-  if $ctxcfg_parameters {
-    validate_array($ctxcfg_parameters)
-  }
+  validate_array($ctxcfg_parameters)
 
   if is_string($is_farm_master) {
     $is_farm_master_real = str2bool($is_farm_master)
@@ -223,9 +219,7 @@ class citrix_unix (
     require  => Package['ctxsmf_package'],
   }
 
-  if $ctxcfg_parameters {
-    citrix_unix::ctxcfg { $ctxcfg_parameters: }
-  }
+  citrix_unix::ctxcfg { $ctxcfg_parameters: }
 
   # Citrix farm management
   if $is_farm_master_real == true {
@@ -253,9 +247,7 @@ class citrix_unix (
       require => Service['ctxsrv_service'],
     }
 
-    if $applications {
-      create_resources('::citrix_unix::application', $applications)
-    }
+    create_resources('::citrix_unix::application', $applications)
   }
   else {
     if is_string($farm_master) == false { fail('citrix_unix::farm_master is not a string') }
