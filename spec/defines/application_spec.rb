@@ -129,7 +129,7 @@ describe 'citrix_unix::application' do
         :name    => %w(use_ssl),
         :valid   => %w(yes no),
         :invalid => ['string', %w(array), { 'ha' => 'sh' }, 3, 2.42, true, nil],
-        :message => 'is not a string containing yes or no',
+        :message => 'is not a string( containing yes or no)?',
       },
       'String' => {
         :name    => %w(colordepth windowsize command),

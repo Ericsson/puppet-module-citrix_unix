@@ -591,7 +591,7 @@ describe 'citrix_unix' do
         :name    => %w(ctxssl_config_mode ctxssl_config_mode ctxssl_config_mode),
         :valid   => %w(0644 0755 0640 0740),
         :invalid => ['0844', '755', '00644', 'string', %w(array), { 'ha' => 'sh' }, 3, 2.42, false, nil],
-        :message => 'is not a file mode in octal notation',
+        :message => '(is not a string|is not a file mode in octal notation)',
       },
       'Hash' => {
         :name    => %w[applications],

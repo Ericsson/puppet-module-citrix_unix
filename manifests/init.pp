@@ -94,6 +94,9 @@ class citrix_unix (
   if is_string($package_provider)             == false { fail('citrix_unix::package_provider is not a string') }
   if is_string($package_vendor)               == false { fail('citrix_unix::package_vendor is not a string') }
   if is_string($package_description)          == false { fail('citrix_unix::package_description is not a string') }
+  if is_string($ctxssl_config_mode)           == false { fail('citrix_unix::ctxssl_config_mode is not a string') }
+  if is_string($ctxfarm_responsefile_mode)    == false { fail('citrix_unix::ctxfarm_responsefile_mode is not a string') }
+  if is_string($ctxappcfg_responsefile_mode)  == false { fail('citrix_unix::ctxappcfg_responsefile_mode is not a string') }
 
   validate_re($ctxssl_config_mode,          '^[0-7]{4}$', 'citrix_unix::ctxssl_config_mode is not a file mode in octal notation.')
   validate_re($ctxfarm_responsefile_mode,   '^[0-7]{4}$', 'citrix_unix::ctxfarm_responsefile_mode is not a file mode in octal notation.')
