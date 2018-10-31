@@ -1,6 +1,6 @@
 {
   "name":         "ericsson-citrix_unix",
-  "version":      "0.2.0",
+  "version":      "0.2.1",
   "author":       "ericsson",
   "summary":      "Manages Citrix Presentation Server for UNIX",
   "description":  "Manages Citrix Presentation Server for UNIX",
